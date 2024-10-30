@@ -17,28 +17,64 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
-*/
-
+ */
 package it.unimi.di.prog2.e03;
+
+import java.util.Scanner;
 
 /**
  * Vedi <a
- * href="https://github.com/mapio/labprog/blob/master/esercizi/bounding_box/Testo.md">testo</a>,
+ * href=
+ * "https://github.com/mapio/labprog/blob/master/esercizi/bounding_box/Testo.md">testo</a>,
  */
 public class BoundingBox {
 
-  /** . */
-  private BoundingBox() {}
-
-  /*- Completa il seguente main
-
-  public static void main(String[] args) {
-    try (Scanner s = new Scanner(System.in)) {
-      while (s.hasNext()) {
-        final String linea = s.nextLine();
-      }
+    /**
+     * .
+     */
+    private BoundingBox() {
     }
-  }
 
-  */
+    /*- Completa il seguente main*/
+    public static void main(String[] args) {
+        int firstStarLine = Integer.MAX_VALUE, firstStarColumn = Integer.MAX_VALUE;
+        int lastStarLine = Integer.MIN_VALUE, lastStarColumn = Integer.MIN_VALUE;
+        int line = 0;
+
+        try (Scanner s = new Scanner(System.in)) {
+            while (s.hasNext()) {
+                final String linea = s.nextLine();
+
+                int firstStarInLine = linea.indexOf('*'); // search for * occurrences
+
+                if (firstStarInLine == -1) { // if none is found, go to next line
+                    line++;
+                    continue;
+                } else {                        // if any is found
+                    if (line < firstStarLine) { // check if it's the first line to have one
+                        firstStarLine = line;   // if so, update the first line occurrence
+                    }
+
+                    // if the first star in line is in a column that precedes the previously
+                    // found first column containing stars, update it
+                    if (firstStarInLine < firstStarColumn) {
+                        firstStarColumn = firstStarInLine;
+                    }
+
+                    // if the last star in line is in a column that follows the previously
+                    // found last column containing stars, update it
+                    int lastStarInLine = linea.lastIndexOf('*');
+                    if (lastStarInLine > lastStarColumn) {
+                        lastStarColumn = lastStarInLine;
+                    }
+
+                    if (line > lastStarLine) {
+                        lastStarLine = line;
+                    }
+                }
+                line++;
+            }
+        }
+        System.out.printf("%d %d", lastStarLine - firstStarLine + 1, lastStarColumn - firstStarColumn + 1);
+    }
 }
